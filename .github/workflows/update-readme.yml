@@ -1,1 +1,31 @@
-.github/workflows/update-readme.yml
+name: Actualizar README automáticamente
+
+on:
+  push:
+    paths:
+      - 'Libros/*.pdf'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clonar repositorio
+        uses: actions/checkout@v3
+
+      - name: Generar lista de PDFs en orden alfabético
+        run: |
+          echo "# 📘 Biblioteca de Libros" > README.md
+          echo "" >> README.md
+          echo "Lista de libros disponibles (orden alfabético):" >> README.md
+          for file in $(ls Libros/*.pdf | sort); do
+            nombre=$(basename "$file")
+            echo "- [$nombre]($file)" >> README.md
+          done
+
+      - name: Commit cambios
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "actions@github.com"
+          git add README.md
+          git commit -m "Actualizar lista de libros automáticamente en orden alfabético"
+          git push
