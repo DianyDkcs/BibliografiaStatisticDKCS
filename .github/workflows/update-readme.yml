@@ -3,7 +3,7 @@ name: Actualizar README automáticamente
 on:
   push:
     paths:
-      - 'Libros/*.pdf'
+      - '*.pdf'
 
 jobs:
   build:
@@ -16,8 +16,10 @@ jobs:
         run: |
           echo "# 📘 Biblioteca de Libros" > README.md
           echo "" >> README.md
+          echo "Este repositorio contiene libros en PDF relacionados con estadística y matemáticas aplicadas." >> README.md
+          echo "" >> README.md
           echo "Lista de libros disponibles (orden alfabético):" >> README.md
-          for file in $(ls Libros/*.pdf | sort); do
+          for file in $(ls *.pdf | sort); do
             nombre=$(basename "$file")
             echo "- [$nombre]($file)" >> README.md
           done
