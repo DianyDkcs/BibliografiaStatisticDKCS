@@ -1,7 +1,7 @@
-# 📂 Documentos PDF
+# 📘 Biblioteca de Libros
 
-1. [Métodos estadísticos aplicados](Articulos/metodos.pdf)
-2. [Introducción a la estadística](Libros/intro.pdf)
-3. [Epistemología matemática](Presentaciones/epistemologia.pdf)
-4. [Guía de análisis de datos](Manuales/guia_datos.pdf)
+Este repositorio contiene libros en PDF relacionados con estadística y matemáticas aplicadas.
 
+Lista de libros disponibles (orden alfabético):
+
+*(Se actualizará automáticamente cada vez que se suba un nuevo PDF a la carpeta `Libros`)*
