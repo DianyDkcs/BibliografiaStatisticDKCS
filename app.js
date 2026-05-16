@@ -27,7 +27,9 @@ async function cargarPDFs() {
       .map(archivo => ({
         nombre: archivo.name,
         titulo: limpiarNombre(archivo.name),
-        url: archivo.download_url
+
+        // Esta ruta usa GitHub Pages, no descarga directa de GitHub.
+        url: `${PDF_FOLDER}/${encodeURIComponent(archivo.name)}`
       }));
 
     mostrarPDFs(archivosPDF);
@@ -39,6 +41,8 @@ async function cargarPDFs() {
         Revisa que exista la carpeta "pdfs" y que tus archivos terminen en .pdf.
       </p>
     `;
+
+    console.error(error);
   }
 }
 
@@ -79,6 +83,9 @@ function limpiarNombre(nombreArchivo) {
     .replace(/\.pdf$/i, "")
     .replace(/[-_]/g, " ")
     .replace(/\s+/g, " ")
+    .replace(/\(\d+\)/g, "")
+    .replace(/libgen\.li/gi, "")
+    .replace(/\b[a-f0-9]{20,}\b/gi, "")
     .trim();
 }
 
