@@ -107,3 +107,39 @@ button:hover,
   color: #b00020;
   font-weight: bold;
 }
+.recursos-html {
+  background: white;
+  padding: 25px;
+  margin-bottom: 30px;
+  border-radius: 14px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+.botones-html {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 18px 0;
+}
+
+.botones-html button {
+  background: #263f73;
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.botones-html button:hover {
+  background: #4b6cb7;
+}
+
+#visor-html {
+  width: 100%;
+  height: 750px;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  background: white;
+}
