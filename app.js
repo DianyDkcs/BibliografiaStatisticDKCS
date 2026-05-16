@@ -101,3 +101,19 @@ buscador.addEventListener("input", () => {
 });
 
 cargarPDFs();
+
+function mostrarHTML(ruta, titulo) {
+  const visorHTML = document.getElementById("visor-html");
+  const tituloHTML = document.getElementById("titulo-html");
+
+  if (!visorHTML || !tituloHTML) {
+    return;
+  }
+
+  tituloHTML.textContent = titulo;
+  visorHTML.src = ruta;
+
+  document.querySelector(".recursos-html").scrollIntoView({
+    behavior: "smooth"
+  });
+}
