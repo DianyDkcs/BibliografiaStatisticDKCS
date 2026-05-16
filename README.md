@@ -3,10 +3,6 @@
 Este repositorio contiene libros en PDF relacionados con estadística y matemáticas aplicadas.
 
 Lista de libros disponibles (orden alfabético):
-- [Optimización](Optimización)
-- [de](de)
-- [procesos](procesos)
-- [agroindustriales.pdf](agroindustriales.pdf)
 - [Probabilidad](Probabilidad)
 - [y](y)
 - [Estadística.](Estadística.)
