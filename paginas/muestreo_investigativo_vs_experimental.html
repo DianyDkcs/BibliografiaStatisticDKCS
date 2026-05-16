@@ -1,0 +1,335 @@
+
+<style>
+  * { box-sizing: border-box; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+  .tab-bar { display: flex; gap: 6px; margin-bottom: 1.5rem; }
+  .tab { flex: 1; padding: 10px 8px; font-size: 13px; font-weight: 500; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); background: var(--color-background-secondary); color: var(--color-text-secondary); cursor: pointer; transition: all .2s; text-align: center; }
+  .tab.active { background: var(--color-background-primary); color: var(--color-text-primary); border-color: var(--color-border-primary); }
+  .panel { display: none; }
+  .panel.active { display: block; }
+  .card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; margin-bottom: 1rem; }
+  .badge { display: inline-block; font-size: 11px; font-weight: 500; padding: 3px 8px; border-radius: 20px; margin-bottom: 8px; }
+  .badge-obs { background: var(--color-background-info); color: var(--color-text-info); }
+  .badge-exp { background: #EAF3DE; color: #3B6D11; }
+  .badge-tip { background: #FAEEDA; color: #854F0B; }
+  .badge-warn { background: #FCEBEB; color: #A32D2D; }
+  .type-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+  .type-card { border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 12px; cursor: pointer; transition: border-color .2s, background .2s; }
+  .type-card:hover { border-color: var(--color-border-primary); background: var(--color-background-secondary); }
+  .type-card.selected { border-color: var(--color-border-info); background: var(--color-background-info); }
+  .type-card h4 { font-size: 13px; font-weight: 500; margin: 0 0 4px; }
+  .type-card p { font-size: 12px; color: var(--color-text-secondary); margin: 0; line-height: 1.5; }
+  .detail-box { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 14px; margin-top: 12px; font-size: 13px; line-height: 1.7; display: none; }
+  .detail-box.show { display: block; }
+  .vet-example { background: #EAF3DE; border-radius: var(--border-radius-md); padding: 12px; margin-top: 8px; font-size: 12px; color: #27500A; line-height: 1.6; }
+  .formula-box { font-size: 13px; background: var(--color-background-secondary); border-left: 3px solid var(--color-border-info); padding: 10px 14px; border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0; margin: 10px 0; font-family: var(--font-mono); }
+  .step { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 12px; }
+  .step-num { min-width: 28px; height: 28px; border-radius: 50%; background: var(--color-background-info); color: var(--color-text-info); font-size: 12px; font-weight: 500; display: flex; align-items: center; justify-content: center; }
+  .step-content { font-size: 13px; line-height: 1.6; }
+  .compare-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 6px; }
+  .compare-cell { padding: 8px 10px; border-radius: var(--border-radius-md); font-size: 12px; line-height: 1.5; }
+  .compare-header { font-weight: 500; font-size: 13px; text-align: center; padding: 6px; border-radius: var(--border-radius-md); margin-bottom: 4px; }
+  .col-obs { background: var(--color-background-info); color: var(--color-text-primary); }
+  .col-exp { background: #EAF3DE; color: var(--color-text-primary); }
+  .highlight { font-weight: 500; }
+  h3 { font-size: 16px; font-weight: 500; margin: 0 0 4px; }
+  p.lead { font-size: 13px; color: var(--color-text-secondary); margin: 0 0 14px; line-height: 1.6; }
+  label { font-size: 13px; color: var(--color-text-secondary); }
+  select { width: 100%; margin-top: 4px; margin-bottom: 12px; font-size: 13px; }
+  #calc-result { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 12px; font-size: 13px; margin-top: 10px; display: none; }
+  #calc-result.show { display: block; }
+  .stat { font-size: 22px; font-weight: 500; color: var(--color-text-primary); }
+  .stat-label { font-size: 12px; color: var(--color-text-secondary); }
+</style>
+
+<h2 class="sr-only">Guía de muestreo para estudios en medicina veterinaria: observacional y experimental</h2>
+
+<div style="padding: 1rem 0 0;">
+  <h3 style="font-size:18px; margin-bottom:4px;">Muestreo en investigación veterinaria</h3>
+  <p class="lead">Selecciona el tipo de estudio para explorar qué muestreo aplicar</p>
+
+  <div class="tab-bar">
+    <div class="tab active" onclick="showTab('obs')">📋 Estudio observacional</div>
+    <div class="tab" onclick="showTab('exp')">🧪 Estudio experimental</div>
+    <div class="tab" onclick="showTab('comp')">⚖️ Comparación rápida</div>
+    <div class="tab" onclick="showTab('calc')">🧮 Calculadora n</div>
+  </div>
+
+  <!-- PANEL OBSERVACIONAL -->
+  <div id="panel-obs" class="panel active">
+    <div class="card">
+      <span class="badge badge-obs">Estudio observacional / descriptivo</span>
+      <h3>¿Qué es?</h3>
+      <p class="lead">Describes o analizas lo que ya existe en la naturaleza, <strong>sin intervenir</strong>. Ej: prevalencia de parásitos en bovinos de la provincia, estado nutricional de caninos atendidos en clínica.</p>
+
+      <p style="font-size:13px; font-weight:500; margin-bottom:8px;">Elige el tipo de muestreo según tu situación:</p>
+      <div class="type-grid">
+        <div class="type-card" onclick="selectType('aleatorio-simple')">
+          <h4>🎲 Aleatorio simple</h4>
+          <p>Todos tienen igual probabilidad de ser seleccionados</p>
+        </div>
+        <div class="type-card" onclick="selectType('sistematico')">
+          <h4>📏 Sistemático</h4>
+          <p>Seleccionas cada n-ésimo animal de una lista ordenada</p>
+        </div>
+        <div class="type-card" onclick="selectType('estratificado')">
+          <h4>🗂️ Estratificado</h4>
+          <p>Divides la población en grupos (estratos) y muestreas cada uno</p>
+        </div>
+        <div class="type-card" onclick="selectType('conglomerados')">
+          <h4>🏘️ Por conglomerados</h4>
+          <p>Seleccionas grupos naturales completos (fincas, rebaños, comunidades)</p>
+        </div>
+      </div>
+      <div class="detail-box" id="detail-box">
+        <p id="detail-text"></p>
+        <div class="vet-example" id="detail-example"></div>
+        <div style="margin-top:8px; font-size:12px; color:var(--color-text-secondary);" id="detail-cuando"></div>
+      </div>
+    </div>
+    <div class="card">
+      <span class="badge badge-tip">¿Cuántos animales necesito?</span>
+      <p style="font-size:13px; margin:0 0 6px;">Para estudios descriptivos (prevalencia), usa esta fórmula general:</p>
+      <div class="formula-box">n = Z² × p × (1-p) / e²</div>
+      <p style="font-size:12px; color:var(--color-text-secondary); margin:0;">Donde Z=1.96 (confianza 95%), p=proporción esperada (si no sabes, usa 0.5), e=error aceptado (ej: 0.05). Usa la pestaña 🧮 para calcularlo automáticamente.</p>
+    </div>
+  </div>
+
+  <!-- PANEL EXPERIMENTAL -->
+  <div id="panel-exp" class="panel">
+    <div class="card">
+      <span class="badge badge-exp">Estudio experimental</span>
+      <h3>¿Qué es?</h3>
+      <p class="lead">Tú <strong>aplicas un tratamiento</strong> y mides el efecto. La clave es la <strong>asignación aleatoria</strong> de los animales a los grupos. Ej: eficacia de un antiparasitario, comparar dos dietas, efecto de una vacuna.</p>
+
+      <p style="font-size:13px; font-weight:500; margin-bottom:8px;">Principios fundamentales del diseño experimental:</p>
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <span class="highlight">Aleatorización:</span> Asignar animales a grupos por azar (sorteo, tabla de números random). Elimina el sesgo de selección y hace los grupos comparables.
+          <div class="vet-example">🐄 Tienes 40 vacas → numeras del 1 al 40 → usas una app o tabla aleatoria → las 20 primeras números = Grupo tratamiento, las otras 20 = Grupo control.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <span class="highlight">Repetición:</span> Suficientes unidades experimentales por grupo para detectar diferencias reales. Un solo animal por grupo no te permite sacar conclusiones.
+          <div class="vet-example">🐑 Si estudias una vacuna, necesitas al menos 10-15 ovinos por grupo para que la estadística tenga potencia.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <span class="highlight">Control:</span> Siempre incluye un grupo que no recibe el tratamiento (o recibe el tratamiento estándar). Sin control, no puedes saber si el efecto se debe a tu intervención.
+          <div class="vet-example">🐕 Grupo A: nuevo antiinflamatorio / Grupo B: placebo o fármaco de referencia</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <span class="highlight">Homogeneidad de grupos:</span> Los animales deben ser similares en peso, edad, sexo antes de asignarlos. Si hay diferencias, usa el bloqueo.
+          <div class="vet-example">🐷 Agrupa cerdos por peso (liviano/mediano/pesado) y dentro de cada bloque aleatoriza. Eso se llama diseño en bloques completos al azar (DBCA).</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <span class="badge badge-tip">¿Cuántos animales por grupo?</span>
+      <p style="font-size:13px; margin:0 0 6px;">Para experimentos (comparar medias entre grupos):</p>
+      <div class="formula-box">n = 2 × (Z<sub>α</sub> + Z<sub>β</sub>)² × σ² / δ²</div>
+      <p style="font-size:12px; color:var(--color-text-secondary); margin:0 0 6px;">Donde σ=desviación estándar esperada, δ=diferencia mínima que quieres detectar. Regla práctica: si no tienes datos previos, usa la pestaña 🧮 o consulta un estudio piloto. Mínimo recomendado: <strong>10 animales por grupo</strong>.</p>
+      <div class="vet-example">📌 Si en un experimento con cuyes quieres detectar una diferencia de 50 g de peso vivo con σ=80 g, y quieres 95% de confianza y 80% de potencia, necesitas ≈ 21 cuyes por grupo.</div>
+    </div>
+  </div>
+
+  <!-- PANEL COMPARACIÓN -->
+  <div id="panel-comp" class="panel">
+    <div class="card">
+      <div class="compare-row">
+        <div class="compare-header col-obs">📋 Observacional</div>
+        <div class="compare-header col-exp">🧪 Experimental</div>
+      </div>
+
+      <div style="font-size:11px; font-weight:500; color:var(--color-text-secondary); margin-bottom:6px; padding: 0 2px;">PREGUNTA DE INVESTIGACIÓN</div>
+      <div class="compare-row">
+        <div class="compare-cell col-obs">¿Cuántos bovinos tienen brucelosis en Chimborazo?</div>
+        <div class="compare-cell col-exp">¿La vacuna X reduce la incidencia de brucelosis?</div>
+      </div>
+
+      <div style="font-size:11px; font-weight:500; color:var(--color-text-secondary); margin: 8px 0 6px; padding: 0 2px;">ROL DEL INVESTIGADOR</div>
+      <div class="compare-row">
+        <div class="compare-cell col-obs">Solo observa y registra. No interviene.</div>
+        <div class="compare-cell col-exp">Aplica un tratamiento y mide el efecto.</div>
+      </div>
+
+      <div style="font-size:11px; font-weight:500; color:var(--color-text-secondary); margin: 8px 0 6px; padding: 0 2px;">TIPO DE MUESTREO PRINCIPAL</div>
+      <div class="compare-row">
+        <div class="compare-cell col-obs">Probabilístico: aleatorio simple, estratificado, sistemático, conglomerados.</div>
+        <div class="compare-cell col-exp">Asignación aleatoria de animales a grupos de tratamiento.</div>
+      </div>
+
+      <div style="font-size:11px; font-weight:500; color:var(--color-text-secondary); margin: 8px 0 6px; padding: 0 2px;">CRITERIO PARA EL TAMAÑO DE MUESTRA</div>
+      <div class="compare-row">
+        <div class="compare-cell col-obs">Prevalencia esperada + error aceptado + nivel de confianza.</div>
+        <div class="compare-cell col-exp">Diferencia a detectar + variabilidad esperada + potencia estadística.</div>
+      </div>
+
+      <div style="font-size:11px; font-weight:500; color:var(--color-text-secondary); margin: 8px 0 6px; padding: 0 2px;">PUEDE ESTABLECER CAUSALIDAD</div>
+      <div class="compare-row">
+        <div class="compare-cell col-obs" style="color:#A32D2D;">❌ Solo asociación/correlación</div>
+        <div class="compare-cell col-exp" style="color:#27500A;">✅ Sí, con diseño adecuado</div>
+      </div>
+
+      <div style="font-size:11px; font-weight:500; color:var(--color-text-secondary); margin: 8px 0 6px; padding: 0 2px;">EJEMPLO VETERINARIO</div>
+      <div class="compare-row">
+        <div class="compare-cell col-obs">Encuesta de condición corporal en ovinos de la sierra ecuatoriana.</div>
+        <div class="compare-cell col-exp">Comparar dos protocolos de sincronización del celo en vacas Holstein.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <span class="badge badge-warn">⚠️ Error frecuente en tesistas</span>
+      <p style="font-size:13px; margin:0; line-height:1.7;">Confundir el tipo de muestreo con el diseño del estudio. El muestreo responde <em>¿cómo selecciono mis unidades?</em>; el diseño responde <em>¿cómo organizo mi estudio?</em>. Un estudio experimental siempre incluye <strong>aleatorización</strong>, independientemente de cómo hayas conseguido los animales.</p>
+    </div>
+  </div>
+
+  <!-- PANEL CALCULADORA -->
+  <div id="panel-calc" class="panel">
+    <div class="card">
+      <span class="badge badge-obs">Calculadora de tamaño de muestra</span>
+      <h3>¿Para qué tipo de estudio?</h3>
+      <p class="lead">Selecciona el escenario y completa los datos para obtener el n mínimo recomendado.</p>
+
+      <label>Tipo de estudio</label>
+      <select id="calc-type" onchange="resetCalc()">
+        <option value="prev">Observacional — Estimar prevalencia (proporción)</option>
+        <option value="exp">Experimental — Comparar dos grupos (medias)</option>
+      </select>
+
+      <div id="form-prev">
+        <label>Prevalencia esperada (p) — si no sabes, usa 0.50</label>
+        <input type="range" min="0.05" max="0.95" step="0.05" value="0.5" id="p-val" oninput="updateP()">
+        <div style="font-size:13px; margin-bottom:10px;">p = <span id="p-show">0.50</span></div>
+
+        <label>Error máximo aceptable (e)</label>
+        <select id="e-val">
+          <option value="0.05">±5% (recomendado)</option>
+          <option value="0.10">±10%</option>
+          <option value="0.03">±3% (alta precisión)</option>
+        </select>
+
+        <label>Nivel de confianza</label>
+        <select id="z-val">
+          <option value="1.96">95% (estándar)</option>
+          <option value="2.576">99%</option>
+          <option value="1.645">90%</option>
+        </select>
+      </div>
+
+      <div id="form-exp" style="display:none">
+        <label>Desviación estándar esperada (σ) — usa datos de literatura</label>
+        <input type="number" id="sigma-val" value="1" min="0.01" step="0.1" placeholder="ej: 1.5">
+
+        <label>Diferencia mínima a detectar (δ)</label>
+        <input type="number" id="delta-val" value="0.5" min="0.01" step="0.1" placeholder="ej: 0.5">
+
+        <label>Potencia estadística (1-β)</label>
+        <select id="power-val">
+          <option value="0.842">80% (estándar)</option>
+          <option value="1.282">90%</option>
+        </select>
+      </div>
+
+      <button onclick="calcN()" style="width:100%; margin-top:4px;">Calcular tamaño de muestra ↗</button>
+
+      <div id="calc-result">
+        <div class="stat" id="n-result">—</div>
+        <div class="stat-label" id="n-label">animales mínimos</div>
+        <div style="font-size:12px; color:var(--color-text-secondary); margin-top:8px;" id="n-note"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const types = {
+  'aleatorio-simple': {
+    text: 'Cada animal tiene la misma probabilidad de ser elegido. Se usa cuando tienes acceso a una lista completa de toda la población (padrón, registros, aretes). Se sortea usando una tabla de números aleatorios o aplicación.',
+    example: '🐄 Tienes un padrón de 500 bovinos de una hacienda. Numeras del 1 al 500 y con una app de números aleatorios seleccionas 50. Los que salgan en el sorteo forman tu muestra.',
+    cuando: '✅ Úsalo cuando: tienes un listado completo y puedes acceder a cualquier animal fácilmente.'
+  },
+  'sistematico': {
+    text: 'Ordenas todos los animales en una lista y seleccionas cada k-ésimo animal. k = N/n (tamaño población / tamaño muestra). El primer animal se elige al azar entre los primeros k.',
+    example: '🐑 Tienes 200 ovinos en una manga de vacunación. Quieres 40. k=200/40=5. Empiezas por un número del 1 al 5 al azar (sale el 3), luego tomas el 3, 8, 13, 18... hasta completar 40.',
+    cuando: '✅ Úsalo cuando: los animales pasan por un punto (manga, báscula, ordeño) y puedes contarlos en orden.'
+  },
+  'estratificado': {
+    text: 'Divides la población en grupos homogéneos (estratos) como sexo, edad, raza, estado reproductivo. Luego aplicas muestreo aleatorio dentro de cada estrato. Garantiza representación de todos los grupos.',
+    example: '🐖 Estudias condición corporal en cerdas. Estratificas por etapa productiva: vacías (n=15), gestantes (n=20), lactantes (n=15). Dentro de cada grupo muestreas al azar. Total: 50 cerdas representativas de todas las etapas.',
+    cuando: '✅ Úsalo cuando: existen subgrupos importantes que podrían tener resultados diferentes y quieres que todos estén representados.'
+  },
+  'conglomerados': {
+    text: 'La unidad de muestreo es un grupo natural (finca, rebaño, aldea, galpón) en lugar de un animal individual. Primero seleccionas aleatoriamente los grupos y luego estudias todos o una muestra de los animales dentro de cada grupo seleccionado.',
+    example: '🐔 Quieres estudiar salmonela en granjas avícolas de Chimborazo. No puedes muestrear granja por granja todas. Seleccionas al azar 10 granjas de un listado de 80, y dentro de cada granja tomas 5 aves. Muestra total: 50 aves de 10 granjas.',
+    cuando: '✅ Úsalo cuando: la población está dispersa geográficamente, es costoso visitar cada unidad individual, o no tienes un listado de todos los animales pero sí de las unidades (fincas, corrales).'
+  }
+};
+
+function showTab(id) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  const tabs = document.querySelectorAll('.tab');
+  const map = {obs:0, exp:1, comp:2, calc:3};
+  tabs[map[id]].classList.add('active');
+}
+
+function selectType(key) {
+  document.querySelectorAll('.type-card').forEach(c => c.classList.remove('selected'));
+  event.currentTarget.classList.add('selected');
+  const d = types[key];
+  document.getElementById('detail-text').textContent = d.text;
+  document.getElementById('detail-example').textContent = d.example;
+  document.getElementById('detail-cuando').textContent = d.cuando;
+  const box = document.getElementById('detail-box');
+  box.classList.add('show');
+}
+
+function updateP() {
+  document.getElementById('p-show').textContent = parseFloat(document.getElementById('p-val').value).toFixed(2);
+}
+
+function resetCalc() {
+  const t = document.getElementById('calc-type').value;
+  document.getElementById('form-prev').style.display = t === 'prev' ? 'block' : 'none';
+  document.getElementById('form-exp').style.display = t === 'exp' ? 'block' : 'none';
+  document.getElementById('calc-result').classList.remove('show');
+}
+
+function calcN() {
+  const t = document.getElementById('calc-type').value;
+  let n, note;
+  if (t === 'prev') {
+    const p = parseFloat(document.getElementById('p-val').value);
+    const e = parseFloat(document.getElementById('e-val').value);
+    const z = parseFloat(document.getElementById('z-val').value);
+    n = Math.ceil((z * z * p * (1 - p)) / (e * e));
+    note = `Con p=${p.toFixed(2)}, error=±${(e*100).toFixed(0)}%, confianza=${z===1.96?'95%':z===2.576?'99%':'90%'}. Ajusta por pérdidas esperadas: n_ajustado = n / (1 - % pérdida).`;
+  } else {
+    const sigma = parseFloat(document.getElementById('sigma-val').value) || 1;
+    const delta = parseFloat(document.getElementById('delta-val').value) || 0.5;
+    const zb = parseFloat(document.getElementById('power-val').value);
+    const za = 1.96;
+    n = Math.ceil(2 * Math.pow((za + zb) * sigma / delta, 2));
+    note = `${n} animales POR GRUPO (total = ${n*2} con 2 grupos). Si tienes más grupos, multiplica. Verifica con tu director que σ y δ sean valores realistas para tu especie y variable.`;
+  }
+  document.getElementById('n-result').textContent = n;
+  document.getElementById('n-label').textContent = t === 'prev' ? 'animales en total (mínimo)' : 'animales por grupo (mínimo)';
+  document.getElementById('n-note').textContent = note;
+  document.getElementById('calc-result').classList.add('show');
+}
+</script>
