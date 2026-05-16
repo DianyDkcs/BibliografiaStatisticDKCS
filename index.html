@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Biblioteca Estadística DKCS</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <h1>Biblioteca Estadística DKCS</h1>
+    <p>Libros y materiales usados en clase</p>
+  </header>
+
+  <main>
+    <section class="biblioteca">
+      <h2>Biblioteca de PDFs</h2>
+
+      <input 
+        type="text" 
+        id="buscador" 
+        placeholder="Buscar libro..."
+      >
+
+      <div id="lista-pdfs" class="grid">
+        Cargando libros...
+      </div>
+    </section>
+
+    <section class="visor">
+      <h2 id="titulo-pdf">Selecciona un libro para visualizarlo</h2>
+
+      <iframe 
+        id="visor-pdf" 
+        src="">
+      </iframe>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
