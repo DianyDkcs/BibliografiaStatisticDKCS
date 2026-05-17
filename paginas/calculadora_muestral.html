@@ -1,0 +1,532 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+.wrap{padding:1rem 0}
+.top-bar{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1.5rem}
+.top-btn{padding:13px 10px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-lg);background:var(--color-background-secondary);color:var(--color-text-secondary);cursor:pointer;transition:all .18s;text-align:center;font-size:13px;font-weight:500;line-height:1.4}
+.top-btn .icon{font-size:20px;display:block;margin-bottom:3px}
+.top-btn .sub{font-size:11px;font-weight:400;color:var(--color-text-tertiary);margin-top:2px}
+.top-btn.on{background:var(--color-background-primary);color:var(--color-text-primary);border-color:var(--color-border-primary)}
+.pnl{display:none}.pnl.on{display:block}
+.pills{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem}
+.pill{padding:6px 14px;font-size:12px;font-weight:500;border:0.5px solid var(--color-border-secondary);border-radius:20px;background:transparent;color:var(--color-text-secondary);cursor:pointer;transition:all .15s}
+.pill.on{border-color:transparent}
+.pill-inv.on{background:#E6F1FB;color:#0C447C}
+.pill-exp.on{background:#EEEDFE;color:#3C3489}
+.spnl{display:none}.spnl.on{display:block}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin-bottom:1rem}
+.badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:500;padding:3px 9px;border-radius:20px;margin-bottom:10px}
+.b-blue{background:#E6F1FB;color:#0C447C}
+.b-green{background:#EAF3DE;color:#27500A}
+.b-purple{background:#EEEDFE;color:#3C3489}
+.b-amber{background:#FAEEDA;color:#633806}
+.b-teal{background:#E1F5EE;color:#085041}
+h3{font-size:14px;font-weight:500;color:var(--color-text-primary);margin-bottom:6px}
+lbl{font-size:12px;color:var(--color-text-secondary);display:block;margin-top:10px;margin-bottom:3px}
+.hint{font-size:11px;color:var(--color-text-tertiary);line-height:1.4;margin-top:1px;display:block}
+input[type=number],select{width:100%;margin-bottom:2px;font-size:13px}
+input[type=range]{width:100%;margin-bottom:2px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.g4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.met{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px;text-align:center}
+.met .v{font-size:22px;font-weight:500;line-height:1.1}
+.met .l{font-size:10px;color:var(--color-text-secondary);margin-top:3px;line-height:1.4}
+.rbox{border-radius:var(--border-radius-md);padding:12px 14px;font-size:12px;line-height:1.7;margin-top:10px;display:none}
+.rbox.on{display:block}
+.r-info{background:#E6F1FB;color:#042C53}
+.r-ok{background:#EAF3DE;color:#173404}
+.r-warn{background:#FAEEDA;color:#412402}
+.r-danger{background:#FCEBEB;color:#501313}
+.formula{font-size:11px;font-family:var(--font-mono);background:var(--color-background-secondary);border-left:2px solid var(--color-border-info);padding:7px 10px;border-radius:0 var(--border-radius-md) var(--border-radius-md) 0;margin:8px 0;line-height:1.6}
+.pbar-wrap{height:20px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);overflow:hidden;margin:10px 0 4px}
+.pbar-fill{height:100%;border-radius:var(--border-radius-md);display:flex;align-items:center;justify-content:flex-end;padding-right:8px;font-size:11px;font-weight:500;min-width:36px;transition:width .4s,background .4s}
+.legend{display:flex;gap:12px;font-size:11px;color:var(--color-text-secondary);margin-bottom:8px}
+.leg-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:3px;vertical-align:middle}
+.mode-toggle{display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap}
+.mtbtn{flex:1;min-width:120px;padding:8px 6px;font-size:11px;font-weight:500;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:transparent;color:var(--color-text-secondary);cursor:pointer;transition:all .15s;text-align:center}
+.mtbtn.on{background:var(--color-background-info);color:var(--color-text-info);border-color:transparent}
+.mpnl{display:none}.mpnl.on{display:block}
+.pop-toggle{display:flex;gap:6px;margin:10px 0 4px}
+.ptbtn{flex:1;padding:6px;font-size:11px;font-weight:500;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:transparent;color:var(--color-text-secondary);cursor:pointer;transition:all .15s;text-align:center}
+.ptbtn.on{background:#EEEDFE;color:#3C3489;border-color:transparent}
+.ppnl{display:none}.ppnl.on{display:block}
+.sep{border:none;border-top:0.5px solid var(--color-border-tertiary);margin:12px 0}
+</style>
+
+<h2 class="sr-only">Calculadora unificada de tamaño de muestra — estudios de investigación y experimentales con población finita o infinita</h2>
+
+<div class="wrap">
+
+<div class="top-bar">
+  <button class="top-btn on" onclick="setTop('inv',this)">
+    <span class="icon"><i class="ti ti-clipboard-text" aria-hidden="true"></i></span>
+    Estudio de investigación
+    <div class="sub">Observacional · Prevalencia · Descriptivo</div>
+  </button>
+  <button class="top-btn" onclick="setTop('exp',this)">
+    <span class="icon"><i class="ti ti-flask" aria-hidden="true"></i></span>
+    Estudio experimental
+    <div class="sub">Comparar grupos · ANOVA · Ensayo clínico</div>
+  </button>
+</div>
+
+<!-- ══════════ INVESTIGACIÓN ══════════ -->
+<div id="pnl-inv" class="pnl on">
+  <div class="pills">
+    <button class="pill pill-inv on" onclick="setSub('inv','inf',this)">Población grande / infinita</button>
+    <button class="pill pill-inv" onclick="setSub('inv','fin',this)">Población finita conocida</button>
+  </div>
+
+  <div id="inv-inf" class="spnl on">
+    <div class="card">
+      <span class="badge b-blue"><i class="ti ti-world" aria-hidden="true"></i> Población grande o desconocida</span>
+      <h3>Calcular n para estimar prevalencia</h3>
+      <div class="formula">n = Z² × p × (1−p) / e²</div>
+      <lbl>Prevalencia esperada (p) <span class="hint">Sin referencia: usa 0.50 — da el n más conservador</span></lbl>
+      <input type="range" min="0.05" max="0.95" step="0.05" value="0.50" oninput="this.nextElementSibling.textContent='p = '+parseFloat(this.value).toFixed(2);this.dataset.v=this.value" data-v="0.50">
+      <div style="font-size:13px;margin-bottom:4px">p = 0.50</div>
+      <div class="g2">
+        <div><lbl>Error máximo (e)</lbl>
+          <select id="ii-e"><option value="0.05">±5%</option><option value="0.10">±10%</option><option value="0.03">±3%</option></select></div>
+        <div><lbl>Confianza</lbl>
+          <select id="ii-z"><option value="1.96">95%</option><option value="2.576">99%</option><option value="1.645">90%</option></select></div>
+      </div>
+      <lbl>Pérdidas esperadas</lbl>
+      <select id="ii-l"><option value="0.10">10%</option><option value="0.15">15%</option><option value="0.20">20%</option><option value="0.00">Sin ajuste</option></select>
+      <button onclick="calcII()" style="width:100%;margin-top:10px">Calcular n <i class="ti ti-arrow-right" aria-hidden="true"></i></button>
+      <div id="ii-out" style="display:none;margin-top:10px">
+        <div class="g3">
+          <div class="met"><div class="v" id="ii-v1">—</div><div class="l">n base</div></div>
+          <div class="met"><div class="v" id="ii-v2" style="color:var(--color-text-info)">—</div><div class="l">n + pérdidas</div></div>
+          <div class="met"><div class="v" id="ii-v3" style="color:#27500A">—</div><div class="l">n recomendado</div></div>
+        </div>
+        <div class="rbox r-info on" id="ii-msg"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="inv-fin" class="spnl">
+    <div class="card">
+      <span class="badge b-green"><i class="ti ti-list-numbers" aria-hidden="true"></i> Población contable y conocida</span>
+      <h3>Calcular n con corrección para población finita</h3>
+      <div class="formula">n₀ = Z²×p×(1−p)/e² → n = n₀ / (1+(n₀−1)/N)</div>
+      <lbl>Tamaño total de la población (N) <span class="hint">Fichas del período, animales del predio, registros del censo</span></lbl>
+      <input type="number" id="if-N" value="400" min="5" step="1">
+      <lbl>Prevalencia esperada (p)</lbl>
+      <input type="range" min="0.05" max="0.95" step="0.05" value="0.50" oninput="this.nextElementSibling.textContent='p = '+parseFloat(this.value).toFixed(2);this.dataset.v=this.value" data-v="0.50">
+      <div style="font-size:13px;margin-bottom:4px">p = 0.50</div>
+      <div class="g2">
+        <div><lbl>Error máximo (e)</lbl>
+          <select id="if-e"><option value="0.05">±5%</option><option value="0.10">±10%</option><option value="0.03">±3%</option></select></div>
+        <div><lbl>Confianza</lbl>
+          <select id="if-z"><option value="1.96">95%</option><option value="2.576">99%</option><option value="1.645">90%</option></select></div>
+      </div>
+      <lbl>Pérdidas esperadas</lbl>
+      <select id="if-l"><option value="0.10">10%</option><option value="0.15">15%</option><option value="0.20">20%</option><option value="0.00">Sin ajuste</option></select>
+      <button onclick="calcIF()" style="width:100%;margin-top:10px">Calcular n <i class="ti ti-arrow-right" aria-hidden="true"></i></button>
+      <div id="if-out" style="display:none;margin-top:10px">
+        <div class="g4">
+          <div class="met"><div class="v" id="if-v1">—</div><div class="l">n₀ infinita</div></div>
+          <div class="met"><div class="v" id="if-v2" style="color:var(--color-text-info)">—</div><div class="l">n corregido</div></div>
+          <div class="met"><div class="v" id="if-v3" style="color:#27500A">—</div><div class="l">n final</div></div>
+          <div class="met"><div class="v" id="if-v4">—</div><div class="l">% de N</div></div>
+        </div>
+        <div class="rbox on" id="if-msg" style="margin-top:10px"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ EXPERIMENTAL ══════════ -->
+<div id="pnl-exp" class="pnl">
+  <div class="pills">
+    <button class="pill pill-exp on" onclick="setSub('exp','e2',this)">2 grupos</button>
+    <button class="pill pill-exp" onclick="setSub('exp','em',this)">3+ grupos (ANOVA)</button>
+    <button class="pill pill-exp" onclick="setSub('exp','ep',this)">Proporciones</button>
+  </div>
+
+  <!-- EXP 2 grupos -->
+  <div id="exp-e2" class="spnl on">
+    <div class="card">
+      <span class="badge b-purple"><i class="ti ti-equal-not" aria-hidden="true"></i> t de Student — comparar medias, 2 grupos</span>
+      <h3>¿Cuántos animales necesito por grupo?</h3>
+      <div class="formula">n = 2 × ((Zα + Zβ) × σ / δ)²</div>
+      <div class="mode-toggle">
+        <button class="mtbtn on" onclick="setMT('e2','cn',this)"><i class="ti ti-calculator" aria-hidden="true"></i> Calcular n</button>
+        <button class="mtbtn" onclick="setMT('e2','vp',this)"><i class="ti ti-bolt" aria-hidden="true"></i> Verificar potencia</button>
+      </div>
+
+      <!-- e2 · calcular n -->
+      <div id="e2-cn" class="mpnl on">
+        <lbl>Tamaño de la población disponible para el experimento <span class="hint">Ej: total de animales en la granja elegibles para el estudio. Si no tienes límite, déjalo en 0</span></lbl>
+        <input type="number" id="e2-N" value="0" min="0" step="1" placeholder="0 = población sin límite">
+        <div class="sep"></div>
+        <lbl>Desviación estándar esperada (σ) <span class="hint">De literatura con la misma especie y variable de respuesta</span></lbl>
+        <input type="number" id="e2-s" value="2.0" min="0.01" step="0.1">
+        <lbl>Diferencia mínima a detectar (δ) <span class="hint">Diferencia con importancia biológica o clínica real</span></lbl>
+        <input type="number" id="e2-d" value="1.0" min="0.01" step="0.1">
+        <div class="g2">
+          <div><lbl>Confianza (1−α)</lbl>
+            <select id="e2-za"><option value="1.96">95%</option><option value="2.576">99%</option><option value="1.645">90%</option></select></div>
+          <div><lbl>Potencia (1−β)</lbl>
+            <select id="e2-zb"><option value="0.842">80%</option><option value="1.282">90%</option></select></div>
+        </div>
+        <lbl>Pérdidas por grupo</lbl>
+        <select id="e2-l"><option value="0.10">10%</option><option value="0.15">15%</option><option value="0.20">20%</option><option value="0.00">Sin ajuste</option></select>
+        <button onclick="calcE2n()" style="width:100%;margin-top:10px">Calcular n <i class="ti ti-arrow-right" aria-hidden="true"></i></button>
+        <div id="e2-nout" style="display:none;margin-top:10px">
+          <div class="g3" id="e2-ngrid">
+            <div class="met"><div class="v" id="e2-v1">—</div><div class="l">n base por grupo</div></div>
+            <div class="met"><div class="v" id="e2-v2" style="color:var(--color-text-info)">—</div><div class="l" id="e2-v2l">n + pérdidas</div></div>
+            <div class="met"><div class="v" id="e2-v3" style="color:#27500A">—</div><div class="l">total animales</div></div>
+          </div>
+          <div class="rbox on" id="e2-nmsg"></div>
+          <div class="rbox on" id="e2-nmsg2" style="margin-top:8px"></div>
+        </div>
+      </div>
+
+      <!-- e2 · verificar potencia -->
+      <div id="e2-vp" class="mpnl">
+        <lbl>Animales disponibles POR GRUPO (n) <span class="hint">Los que realmente puedes usar, ya descontando pérdidas</span></lbl>
+        <input type="number" id="e2-pn" value="10" min="2" step="1">
+        <lbl>Desviación estándar esperada (σ)</lbl>
+        <input type="number" id="e2-ps" value="2.0" min="0.01" step="0.1">
+        <lbl>Diferencia mínima a detectar (δ)</lbl>
+        <input type="number" id="e2-pd" value="1.0" min="0.01" step="0.1">
+        <lbl>Confianza (1−α)</lbl>
+        <select id="e2-pza"><option value="1.96">95%</option><option value="2.576">99%</option><option value="1.645">90%</option></select>
+        <button onclick="calcE2p()" style="width:100%;margin-top:10px">Verificar potencia <i class="ti ti-bolt" aria-hidden="true"></i></button>
+        <div id="e2-pout" style="display:none;margin-top:10px">
+          <div class="g2">
+            <div class="met"><div class="v" id="e2-pv1">—</div><div class="l">potencia estimada</div></div>
+            <div class="met"><div class="v" id="e2-pv2">—</div><div class="l">total animales</div></div>
+          </div>
+          <div class="pbar-wrap"><div class="pbar-fill" id="e2-pb"></div></div>
+          <div class="legend">
+            <span><span class="leg-dot" style="background:#E24B4A"></span>&lt;70% insuficiente</span>
+            <span><span class="leg-dot" style="background:#EF9F27"></span>70–79% marginal</span>
+            <span><span class="leg-dot" style="background:#639922"></span>≥80% aceptable</span>
+          </div>
+          <div class="rbox on" id="e2-pmsg"></div>
+          <div class="rbox r-info on" id="e2-psug" style="margin-top:8px"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXP 3+ grupos -->
+  <div id="exp-em" class="spnl">
+    <div class="card">
+      <span class="badge b-amber"><i class="ti ti-chart-bar" aria-hidden="true"></i> ANOVA — comparar medias, 3 o más grupos</span>
+      <h3>¿Cuántos animales necesito por grupo?</h3>
+      <div class="formula">n por grupo = 2 × ((Zα + Zβ) × σ / δ)²</div>
+      <div class="mode-toggle">
+        <button class="mtbtn on" onclick="setMT('em','cn',this)"><i class="ti ti-calculator" aria-hidden="true"></i> Calcular n</button>
+        <button class="mtbtn" onclick="setMT('em','vp',this)"><i class="ti ti-bolt" aria-hidden="true"></i> Verificar potencia</button>
+      </div>
+
+      <div id="em-cn" class="mpnl on">
+        <lbl>Tamaño total de la población disponible (N total) <span class="hint">Total de animales del predio o criadero elegibles. Déjalo en 0 si no hay límite</span></lbl>
+        <input type="number" id="em-N" value="0" min="0" step="1" placeholder="0 = sin límite">
+        <div class="sep"></div>
+        <lbl>Número de grupos (k)</lbl>
+        <input type="range" min="3" max="8" step="1" value="3" id="em-k" oninput="document.getElementById('em-kl').textContent=this.value;document.getElementById('em-cl').textContent=this.value*(this.value-1)/2">
+        <div style="font-size:13px;margin-bottom:4px">k = <span id="em-kl">3</span> grupos → <span id="em-cl">3</span> comparaciones posibles</div>
+        <lbl>Desviación estándar esperada (σ)</lbl>
+        <input type="number" id="em-s" value="2.0" min="0.01" step="0.1">
+        <lbl>Diferencia mínima a detectar entre cualquier par (δ)</lbl>
+        <input type="number" id="em-d" value="1.0" min="0.01" step="0.1">
+        <div class="g2">
+          <div><lbl>Confianza (1−α)</lbl>
+            <select id="em-za"><option value="1.96">95%</option><option value="2.576">99%</option></select></div>
+          <div><lbl>Potencia (1−β)</lbl>
+            <select id="em-zb"><option value="0.842">80%</option><option value="1.282">90%</option></select></div>
+        </div>
+        <lbl>Pérdidas por grupo</lbl>
+        <select id="em-l"><option value="0.10">10%</option><option value="0.15">15%</option><option value="0.20">20%</option><option value="0.00">Sin ajuste</option></select>
+        <button onclick="calcEMn()" style="width:100%;margin-top:10px">Calcular n <i class="ti ti-arrow-right" aria-hidden="true"></i></button>
+        <div id="em-nout" style="display:none;margin-top:10px">
+          <div class="g3">
+            <div class="met"><div class="v" id="em-v1">—</div><div class="l">n base por grupo</div></div>
+            <div class="met"><div class="v" id="em-v2" style="color:var(--color-text-info)">—</div><div class="l" id="em-v2l">n + pérdidas</div></div>
+            <div class="met"><div class="v" id="em-v3" style="color:#27500A">—</div><div class="l">total animales</div></div>
+          </div>
+          <div class="rbox on" id="em-nmsg"></div>
+          <div class="rbox r-warn on" id="em-ph" style="margin-top:8px"></div>
+          <div class="rbox on" id="em-nmsg2" style="margin-top:8px"></div>
+        </div>
+      </div>
+
+      <div id="em-vp" class="mpnl">
+        <lbl>Número de grupos (k)</lbl>
+        <input type="range" min="3" max="8" step="1" value="3" id="em-pk" oninput="document.getElementById('em-pkl').textContent=this.value">
+        <div style="font-size:13px;margin-bottom:4px">k = <span id="em-pkl">3</span> grupos</div>
+        <lbl>Animales disponibles POR GRUPO (n)</lbl>
+        <input type="number" id="em-pn" value="10" min="2" step="1">
+        <lbl>Desviación estándar esperada (σ)</lbl>
+        <input type="number" id="em-ps" value="2.0" min="0.01" step="0.1">
+        <lbl>Diferencia mínima a detectar entre cualquier par (δ)</lbl>
+        <input type="number" id="em-pd" value="1.0" min="0.01" step="0.1">
+        <lbl>Confianza (1−α)</lbl>
+        <select id="em-pza"><option value="1.96">95%</option><option value="2.576">99%</option></select>
+        <button onclick="calcEMp()" style="width:100%;margin-top:10px">Verificar potencia <i class="ti ti-bolt" aria-hidden="true"></i></button>
+        <div id="em-pout" style="display:none;margin-top:10px">
+          <div class="g3">
+            <div class="met"><div class="v" id="em-pv1">—</div><div class="l">potencia estimada</div></div>
+            <div class="met"><div class="v" id="em-pv2">—</div><div class="l">n por grupo</div></div>
+            <div class="met"><div class="v" id="em-pv3">—</div><div class="l">total animales</div></div>
+          </div>
+          <div class="pbar-wrap"><div class="pbar-fill" id="em-pb"></div></div>
+          <div class="legend">
+            <span><span class="leg-dot" style="background:#E24B4A"></span>&lt;70% insuficiente</span>
+            <span><span class="leg-dot" style="background:#EF9F27"></span>70–79% marginal</span>
+            <span><span class="leg-dot" style="background:#639922"></span>≥80% aceptable</span>
+          </div>
+          <div class="rbox on" id="em-pmsg"></div>
+          <div class="rbox r-info on" id="em-psug" style="margin-top:8px"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXP proporciones -->
+  <div id="exp-ep" class="spnl">
+    <div class="card">
+      <span class="badge b-teal"><i class="ti ti-percentage" aria-hidden="true"></i> Chi cuadrado — comparar proporciones, 2 grupos</span>
+      <h3>¿Cuántos animales necesito por grupo?</h3>
+      <div class="formula">n = (Zα√(2p̄q̄) + Zβ√(p₁q₁+p₂q₂))² / (p₁−p₂)²</div>
+      <div class="mode-toggle">
+        <button class="mtbtn on" onclick="setMT('ep','cn',this)"><i class="ti ti-calculator" aria-hidden="true"></i> Calcular n</button>
+        <button class="mtbtn" onclick="setMT('ep','vp',this)"><i class="ti ti-bolt" aria-hidden="true"></i> Verificar potencia</button>
+      </div>
+
+      <div id="ep-cn" class="mpnl on">
+        <lbl>Tamaño total de la población disponible (N total) <span class="hint">Total de animales elegibles. Déjalo en 0 si no hay límite</span></lbl>
+        <input type="number" id="ep-N" value="0" min="0" step="1" placeholder="0 = sin límite">
+        <div class="sep"></div>
+        <lbl>Proporción esperada grupo control (p₁) <span class="hint">Ej: tasa de curación con tratamiento estándar</span></lbl>
+        <input type="range" min="0.05" max="0.95" step="0.05" value="0.50" oninput="this.nextElementSibling.textContent='p₁ = '+parseFloat(this.value).toFixed(2);this.dataset.v=this.value" data-v="0.50">
+        <div style="font-size:13px;margin-bottom:4px">p₁ = 0.50</div>
+        <lbl>Proporción esperada grupo tratamiento (p₂) <span class="hint">La que esperas obtener con tu intervención</span></lbl>
+        <input type="range" min="0.05" max="0.95" step="0.05" value="0.70" oninput="this.nextElementSibling.textContent='p₂ = '+parseFloat(this.value).toFixed(2);this.dataset.v=this.value" data-v="0.70">
+        <div style="font-size:13px;margin-bottom:4px">p₂ = 0.70</div>
+        <div class="g2">
+          <div><lbl>Confianza (1−α)</lbl>
+            <select id="ep-za"><option value="1.96">95%</option><option value="2.576">99%</option><option value="1.645">90%</option></select></div>
+          <div><lbl>Potencia (1−β)</lbl>
+            <select id="ep-zb"><option value="0.842">80%</option><option value="1.282">90%</option></select></div>
+        </div>
+        <lbl>Pérdidas por grupo</lbl>
+        <select id="ep-l"><option value="0.10">10%</option><option value="0.15">15%</option><option value="0.20">20%</option><option value="0.00">Sin ajuste</option></select>
+        <button onclick="calcEPn()" style="width:100%;margin-top:10px">Calcular n <i class="ti ti-arrow-right" aria-hidden="true"></i></button>
+        <div id="ep-nout" style="display:none;margin-top:10px">
+          <div class="g3">
+            <div class="met"><div class="v" id="ep-v1">—</div><div class="l">n base por grupo</div></div>
+            <div class="met"><div class="v" id="ep-v2" style="color:var(--color-text-info)">—</div><div class="l" id="ep-v2l">n + pérdidas</div></div>
+            <div class="met"><div class="v" id="ep-v3" style="color:#27500A">—</div><div class="l">total animales</div></div>
+          </div>
+          <div class="rbox on" id="ep-nmsg"></div>
+          <div class="rbox on" id="ep-nmsg2" style="margin-top:8px"></div>
+        </div>
+      </div>
+
+      <div id="ep-vp" class="mpnl">
+        <lbl>Animales disponibles POR GRUPO (n)</lbl>
+        <input type="number" id="ep-pn" value="20" min="2" step="1">
+        <lbl>Proporción esperada grupo control (p₁)</lbl>
+        <input type="range" min="0.05" max="0.95" step="0.05" value="0.50" oninput="this.nextElementSibling.textContent='p₁ = '+parseFloat(this.value).toFixed(2);this.dataset.v=this.value" data-v="0.50">
+        <div style="font-size:13px;margin-bottom:4px">p₁ = 0.50</div>
+        <lbl>Proporción esperada grupo tratamiento (p₂)</lbl>
+        <input type="range" min="0.05" max="0.95" step="0.05" value="0.70" oninput="this.nextElementSibling.textContent='p₂ = '+parseFloat(this.value).toFixed(2);this.dataset.v=this.value" data-v="0.70">
+        <div style="font-size:13px;margin-bottom:4px">p₂ = 0.70</div>
+        <lbl>Confianza (1−α)</lbl>
+        <select id="ep-pza"><option value="1.96">95%</option><option value="2.576">99%</option><option value="1.645">90%</option></select>
+        <button onclick="calcEPp()" style="width:100%;margin-top:10px">Verificar potencia <i class="ti ti-bolt" aria-hidden="true"></i></button>
+        <div id="ep-pout" style="display:none;margin-top:10px">
+          <div class="g2">
+            <div class="met"><div class="v" id="ep-pv1">—</div><div class="l">potencia estimada</div></div>
+            <div class="met"><div class="v" id="ep-pv2">—</div><div class="l">total animales</div></div>
+          </div>
+          <div class="pbar-wrap"><div class="pbar-fill" id="ep-pb"></div></div>
+          <div class="legend">
+            <span><span class="leg-dot" style="background:#E24B4A"></span>&lt;70% insuficiente</span>
+            <span><span class="leg-dot" style="background:#EF9F27"></span>70–79% marginal</span>
+            <span><span class="leg-dot" style="background:#639922"></span>≥80% aceptable</span>
+          </div>
+          <div class="rbox on" id="ep-pmsg"></div>
+          <div class="rbox r-info on" id="ep-psug" style="margin-top:8px"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+function setTop(id,btn){
+  document.querySelectorAll('.top-btn').forEach(b=>b.classList.remove('on'));
+  document.querySelectorAll('.pnl').forEach(p=>p.classList.remove('on'));
+  btn.classList.add('on');document.getElementById('pnl-'+id).classList.add('on');
+}
+function setSub(mode,sub,btn){
+  const par=document.getElementById('pnl-'+mode);
+  par.querySelectorAll('.pill').forEach(b=>b.classList.remove('on'));
+  par.querySelectorAll('.spnl').forEach(p=>p.classList.remove('on'));
+  btn.classList.add('on');document.getElementById(mode+'-'+sub).classList.add('on');
+}
+function setMT(sec,mode,btn){
+  const par=btn.closest('.card');
+  par.querySelectorAll('.mtbtn').forEach(b=>b.classList.remove('on'));
+  par.querySelectorAll('.mpnl').forEach(p=>p.classList.remove('on'));
+  btn.classList.add('on');document.getElementById(sec+'-'+mode).classList.add('on');
+}
+function gs(el){return parseFloat(el.dataset.v)||parseFloat(el.value);}
+function zl(z){return z==1.96?'95%':z==2.576?'99%':'90%';}
+function zbl(z){return z==0.842?'80%':'90%';}
+
+function normCDF(x){
+  const a1=0.254829592,a2=-0.284496736,a3=1.421413741,a4=-1.453152027,a5=1.061405429,p=0.3275911;
+  const s=x<0?-1:1;x=Math.abs(x)/Math.SQRT2;
+  const t=1/(1+p*x);
+  const y=1-(((((a5*t+a4)*t)+a3)*t+a2)*t+a1)*t*Math.exp(-x*x);
+  return 0.5*(1+s*y);
+}
+function pbar(id,pct){
+  const el=document.getElementById(id);
+  el.style.width=Math.min(100,Math.max(4,pct))+'%';
+  if(pct>=80){el.style.background='#639922';el.style.color='#EAF3DE';}
+  else if(pct>=70){el.style.background='#EF9F27';el.style.color='#412402';}
+  else{el.style.background='#E24B4A';el.style.color='#FCEBEB';}
+  el.textContent=pct.toFixed(0)+'%';
+}
+function potMsg(pct,nPg,nNec,rid,sid){
+  let cls,msg;
+  if(pct>=80){cls='r-ok';msg='<i class="ti ti-circle-check" aria-hidden="true"></i> Potencia <strong>'+pct.toFixed(0)+'%</strong> — suficiente. El n de '+nPg+' por grupo es adecuado.';}
+  else if(pct>=70){cls='r-warn';msg='<i class="ti ti-alert-triangle" aria-hidden="true"></i> Potencia <strong>'+pct.toFixed(0)+'%</strong> — marginal. Riesgo elevado de no detectar una diferencia real.';}
+  else{cls='r-danger';msg='<i class="ti ti-circle-x" aria-hidden="true"></i> Potencia <strong>'+pct.toFixed(0)+'%</strong> — insuficiente. Alta probabilidad de error tipo II (falso negativo).';}
+  document.getElementById(rid).innerHTML=msg;document.getElementById(rid).className='rbox '+cls+' on';
+  document.getElementById(sid).innerHTML='<i class="ti ti-bulb" aria-hidden="true"></i> <strong>Para mejorar la potencia:</strong><br>1. Aumentar n a '+nNec+' por grupo (mínimo para 80%).<br>2. Homogenizar grupos antes del experimento (bloquear por peso, edad, sexo).<br>3. Revisar δ: si la diferencia real es mayor, la potencia sube automáticamente.<br>4. Aceptar α=90% si el contexto lo permite.';
+}
+
+function finExp(nf,k,NTotal){
+  if(NTotal<=0) return {npg:nf,msg:null,cls:null};
+  const nTotal=nf*k;
+  const pct=Math.round(nTotal/NTotal*100);
+  const npgDisp=Math.floor(NTotal/k);
+  if(nTotal>NTotal){
+    return{npg:npgDisp,
+      msg:'<i class="ti ti-alert-triangle" aria-hidden="true"></i> <strong>La población disponible (N='+NTotal+') es insuficiente</strong> para el n calculado ('+nTotal+' animales). Con N='+NTotal+' solo puedes asignar <strong>'+npgDisp+' animales por grupo</strong>. Usa el modo "Verificar potencia" para conocer la potencia real con este n.',
+      cls:'r-danger'};
+  } else if(pct>80){
+    return{npg:nf,
+      msg:'<i class="ti ti-alert-triangle" aria-hidden="true"></i> El experimento usará el <strong>'+pct+'% de tu población</strong> ('+nTotal+'/'+NTotal+' animales). Considera si quedan suficientes animales no experimentados para reemplazos o seguimiento.',
+      cls:'r-warn'};
+  } else {
+    return{npg:nf,
+      msg:'<i class="ti ti-circle-check" aria-hidden="true"></i> El experimento usa el <strong>'+pct+'% de tu población</strong> ('+nTotal+'/'+NTotal+'). La población es suficiente.',
+      cls:'r-ok'};
+  }
+}
+
+function calcII(){
+  const sliders=document.querySelectorAll('#inv-inf input[type=range]');
+  const p=gs(sliders[0]),e=parseFloat(document.getElementById('ii-e').value),z=parseFloat(document.getElementById('ii-z').value),l=parseFloat(document.getElementById('ii-l').value);
+  const n0=Math.ceil(z*z*p*(1-p)/(e*e)),nf=l>0?Math.ceil(n0/(1-l)):n0;
+  document.getElementById('ii-v1').textContent=n0;document.getElementById('ii-v2').textContent=nf;document.getElementById('ii-v3').textContent=nf;
+  document.getElementById('ii-out').style.display='block';
+  document.getElementById('ii-msg').innerHTML='<strong>'+nf+' unidades en total</strong> (p='+p.toFixed(2)+', error ±'+(e*100).toFixed(0)+'%, confianza '+zl(z)+(l>0?', +'+Math.round(l*100)+'% pérdidas':'')+').<br><i class="ti ti-info-circle" aria-hidden="true"></i> Selección: muestreo aleatorio simple o sistemático de la lista completa.';
+}
+function calcIF(){
+  const N=parseInt(document.getElementById('if-N').value)||400;
+  const sliders=document.querySelectorAll('#inv-fin input[type=range]');
+  const p=gs(sliders[0]),e=parseFloat(document.getElementById('if-e').value),z=parseFloat(document.getElementById('if-z').value),l=parseFloat(document.getElementById('if-l').value);
+  const n0=Math.ceil(z*z*p*(1-p)/(e*e)),nc=Math.ceil(n0/(1+(n0-1)/N)),nf=l>0?Math.ceil(nc/(1-l)):nc;
+  const pct=Math.round(nf/N*100),ahorro=n0-nc;
+  document.getElementById('if-v1').textContent=n0;document.getElementById('if-v2').textContent=nc;document.getElementById('if-v3').textContent=nf;document.getElementById('if-v4').textContent=pct+'%';
+  document.getElementById('if-out').style.display='block';
+  const k=Math.max(1,Math.floor(N/nf));
+  let cls='r-ok',msg='';
+  if(nf>=N){cls='r-danger';msg='<i class="ti ti-alert-triangle" aria-hidden="true"></i> <strong>n ≥ N → Realiza CENSO TOTAL.</strong> Estudia todos los registros que cumplan los criterios de inclusión.';}
+  else if(pct>70){cls='r-warn';msg='<i class="ti ti-alert-triangle" aria-hidden="true"></i> La muestra supera el 70% de N. Considera hacer censo total. La corrección finita ahorra <strong>'+ahorro+' unidades</strong>.';}
+  else{msg='<i class="ti ti-circle-check" aria-hidden="true"></i> La corrección finita ahorra <strong>'+ahorro+' unidades</strong>. La muestra representa el '+pct+'% de N='+N+'.';}
+  msg+='<br><i class="ti ti-list-check" aria-hidden="true"></i> <strong>Selección sugerida:</strong> muestreo sistemático — toma 1 de cada '+k+' registros ordenados cronológicamente. El primero se elige al azar entre los '+k+' iniciales.';
+  document.getElementById('if-msg').innerHTML=msg;document.getElementById('if-msg').className='rbox '+cls+' on';
+}
+
+function calcE2n(){
+  const NTotal=parseInt(document.getElementById('e2-N').value)||0;
+  const s=parseFloat(document.getElementById('e2-s').value)||1,d=parseFloat(document.getElementById('e2-d').value)||1;
+  const za=parseFloat(document.getElementById('e2-za').value),zb=parseFloat(document.getElementById('e2-zb').value),l=parseFloat(document.getElementById('e2-l').value);
+  const n0=Math.ceil(2*Math.pow((za+zb)*s/d,2)),nf=l>0?Math.ceil(n0/(1-l)):n0;
+  const r=finExp(nf,2,NTotal);
+  document.getElementById('e2-v1').textContent=n0;
+  document.getElementById('e2-v2').textContent=nf;document.getElementById('e2-v2l').textContent=l>0?'n + pérdidas':'n por grupo';
+  document.getElementById('e2-v3').textContent=r.npg*2;
+  document.getElementById('e2-nout').style.display='block';
+  document.getElementById('e2-nmsg').innerHTML='<strong>'+nf+' por grupo → '+nf*2+' animales en total</strong> (σ='+s+', δ='+d+', confianza '+zl(za)+', potencia '+zbl(zb)+(l>0?', +'+Math.round(l*100)+'% pérdidas':'')+').<br><i class="ti ti-info-circle" aria-hidden="true"></i> Análisis: t de Student independiente. Verifica normalidad con Shapiro-Wilk.';
+  document.getElementById('e2-nmsg').className='rbox r-ok on';
+  if(r.msg){document.getElementById('e2-nmsg2').innerHTML=r.msg;document.getElementById('e2-nmsg2').className='rbox '+r.cls+' on';}
+  else{document.getElementById('e2-nmsg2').className='rbox';}
+}
+function calcE2p(){
+  const n=parseInt(document.getElementById('e2-pn').value)||10,s=parseFloat(document.getElementById('e2-ps').value)||1,d=parseFloat(document.getElementById('e2-pd').value)||1,za=parseFloat(document.getElementById('e2-pza').value);
+  const z=d/(s*Math.sqrt(2/n))-za,pot=normCDF(z)*100,nNec=Math.ceil(2*Math.pow((za+0.842)*s/d,2));
+  document.getElementById('e2-pv1').textContent=pot.toFixed(0)+'%';document.getElementById('e2-pv2').textContent=n*2;
+  document.getElementById('e2-pout').style.display='block';pbar('e2-pb',pot);potMsg(pot,n,nNec,'e2-pmsg','e2-psug');
+}
+
+function calcEMn(){
+  const NTotal=parseInt(document.getElementById('em-N').value)||0;
+  const k=parseInt(document.getElementById('em-k').value)||3,s=parseFloat(document.getElementById('em-s').value)||1,d=parseFloat(document.getElementById('em-d').value)||1;
+  const za=parseFloat(document.getElementById('em-za').value),zb=parseFloat(document.getElementById('em-zb').value),l=parseFloat(document.getElementById('em-l').value);
+  const comp=k*(k-1)/2,n0=Math.ceil(2*Math.pow((za+zb)*s/d,2)),nf=l>0?Math.ceil(n0/(1-l)):n0;
+  const r=finExp(nf,k,NTotal);
+  document.getElementById('em-v1').textContent=n0;document.getElementById('em-v2').textContent=nf;document.getElementById('em-v2l').textContent=l>0?'n + pérdidas':'n por grupo';
+  document.getElementById('em-v3').textContent=r.npg*k;
+  document.getElementById('em-nout').style.display='block';
+  document.getElementById('em-nmsg').innerHTML='<strong>'+nf+' por grupo × '+k+' grupos = '+nf*k+' animales en total</strong> (σ='+s+', δ='+d+', confianza '+zl(za)+', potencia '+zbl(zb)+(l>0?', +'+Math.round(l*100)+'% pérdidas':'')+').<br><i class="ti ti-info-circle" aria-hidden="true"></i> Análisis: ANOVA de una vía. Si p &lt; 0.05 → aplica post hoc.';
+  document.getElementById('em-nmsg').className='rbox r-ok on';
+  const ph=k<=4?'Tukey HSD':'Bonferroni o Scheffé';
+  document.getElementById('em-ph').innerHTML='<i class="ti ti-arrow-right" aria-hidden="true"></i> Con '+k+' grupos ('+comp+' comparaciones) → post hoc recomendado: <strong>'+ph+'</strong>.'+(comp>=6?' Considera reducir grupos o usar diseño factorial.':'');
+  if(r.msg){document.getElementById('em-nmsg2').innerHTML=r.msg;document.getElementById('em-nmsg2').className='rbox '+r.cls+' on';}
+  else{document.getElementById('em-nmsg2').className='rbox';}
+}
+function calcEMp(){
+  const k=parseInt(document.getElementById('em-pk').value)||3,n=parseInt(document.getElementById('em-pn').value)||10,s=parseFloat(document.getElementById('em-ps').value)||1,d=parseFloat(document.getElementById('em-pd').value)||1,za=parseFloat(document.getElementById('em-pza').value);
+  const zaAdj=za/Math.sqrt(k-1),z=d/(s*Math.sqrt(2/n))-zaAdj,pot=normCDF(z)*100,nNec=Math.ceil(2*Math.pow((za+0.842)*s/d,2));
+  document.getElementById('em-pv1').textContent=pot.toFixed(0)+'%';document.getElementById('em-pv2').textContent=n;document.getElementById('em-pv3').textContent=n*k;
+  document.getElementById('em-pout').style.display='block';pbar('em-pb',pot);potMsg(pot,n,nNec,'em-pmsg','em-psug');
+}
+
+function calcEPn(){
+  const NTotal=parseInt(document.getElementById('ep-N').value)||0;
+  const sliders=document.querySelectorAll('#ep-cn input[type=range]');
+  const p1=gs(sliders[0]),p2=gs(sliders[1]),za=parseFloat(document.getElementById('ep-za').value),zb=parseFloat(document.getElementById('ep-zb').value),l=parseFloat(document.getElementById('ep-l').value);
+  if(Math.abs(p1-p2)<0.01){document.getElementById('ep-nout').style.display='block';document.getElementById('ep-nmsg').innerHTML='<i class="ti ti-alert-triangle" aria-hidden="true"></i> p₁ y p₂ son iguales. Define una diferencia clínicamente relevante.';document.getElementById('ep-nmsg').className='rbox r-warn on';return;}
+  const pb=(p1+p2)/2,q1=1-p1,q2=1-p2,qb=1-pb;
+  const n0=Math.ceil(Math.pow(za*Math.sqrt(2*pb*qb)+zb*Math.sqrt(p1*q1+p2*q2),2)/Math.pow(p1-p2,2));
+  const nf=l>0?Math.ceil(n0/(1-l)):n0;
+  const r=finExp(nf,2,NTotal);
+  document.getElementById('ep-v1').textContent=n0;document.getElementById('ep-v2').textContent=nf;document.getElementById('ep-v2l').textContent=l>0?'n + pérdidas':'n por grupo';
+  document.getElementById('ep-v3').textContent=r.npg*2;
+  document.getElementById('ep-nout').style.display='block';
+  document.getElementById('ep-nmsg').innerHTML='<strong>'+nf+' por grupo → '+nf*2+' en total</strong> para detectar diferencia de '+Math.round(Math.abs(p1-p2)*100)+'% ('+Math.round(p1*100)+'% vs '+Math.round(p2*100)+'%), confianza '+zl(za)+', potencia '+zbl(zb)+(l>0?', +'+Math.round(l*100)+'% pérdidas':'')+'. <br><i class="ti ti-info-circle" aria-hidden="true"></i> Prueba: Chi cuadrado de Pearson o exacta de Fisher (si celda esperada &lt; 5).';
+  document.getElementById('ep-nmsg').className='rbox r-ok on';
+  if(r.msg){document.getElementById('ep-nmsg2').innerHTML=r.msg;document.getElementById('ep-nmsg2').className='rbox '+r.cls+' on';}
+  else{document.getElementById('ep-nmsg2').className='rbox';}
+}
+function calcEPp(){
+  const n=parseInt(document.getElementById('ep-pn').value)||20;
+  const sliders=document.querySelectorAll('#ep-vp input[type=range]');
+  const p1=gs(sliders[0]),p2=gs(sliders[1]),za=parseFloat(document.getElementById('ep-pza').value);
+  if(Math.abs(p1-p2)<0.01){document.getElementById('ep-pout').style.display='block';document.getElementById('ep-pmsg').innerHTML='<i class="ti ti-alert-triangle" aria-hidden="true"></i> p₁ y p₂ son iguales. Define una diferencia entre los grupos.';document.getElementById('ep-pmsg').className='rbox r-warn on';return;}
+  const pb=(p1+p2)/2,qb=1-pb,q1=1-p1,q2=1-p2;
+  const z=Math.abs(p1-p2)*Math.sqrt(n)/(Math.sqrt(2*pb*qb))-za,pot=normCDF(z)*100;
+  const nNec=Math.ceil(Math.pow(za*Math.sqrt(2*pb*qb)+0.842*Math.sqrt(p1*q1+p2*q2),2)/Math.pow(p1-p2,2));
+  document.getElementById('ep-pv1').textContent=pot.toFixed(0)+'%';document.getElementById('ep-pv2').textContent=n*2;
+  document.getElementById('ep-pout').style.display='block';pbar('ep-pb',pot);potMsg(pot,n,nNec,'ep-pmsg','ep-psug');
+}
+</script>
